@@ -1,5 +1,5 @@
 ---
-name: "feature"
+name: feature
 about: 새로운 기능 구현 및 수정 관련 이슈입니다.
 title: "[feature]: "
 labels: ''

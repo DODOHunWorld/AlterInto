@@ -1,5 +1,5 @@
 ---
-name: "bug"
+name: bug
 about: 버그 리포트 관련 이슈입니다.
 title: "[bug]: "
 labels: ''
