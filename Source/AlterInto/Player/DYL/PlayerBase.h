@@ -21,7 +21,7 @@ public:
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
 	/* Getters */ 
-	bool GetCanDash();
+	bool GetIsDodging();
 
     /* Setters */
 
@@ -45,28 +45,51 @@ protected:
     FRotator cameraRotationDefault = FRotator(-2.f, 0.f, 0.f);
 
 
-	/* Camera - Scene Capture : split 화면 구성 시 필요 / 일단 변수만 추가해둠 */ 
-    UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Camera|SplitView")
-    class USceneCaptureComponent* sceneCaptureComp;
-
-
 	/* IMC */
     UPROPERTY(EditDefaultsOnly, Category = "Input")
 	class UInputMappingContext* imcPlayer;
 
 
 	/* IA - Movement */
-	UPROPERTY(EditDefaultsOnly, Category = "Input")
+	UPROPERTY(EditDefaultsOnly, Category = "Input|Movement")
 	class UInputAction* iaMove;
 
-	UPROPERTY(EditDefaultsOnly, Category = "Input")
+	UPROPERTY(EditDefaultsOnly, Category = "Input|Movement")
 	class UInputAction* iaTurn;
 
-	UPROPERTY(EditDefaultsOnly, Category = "Input")
+	UPROPERTY(EditDefaultsOnly, Category = "Input|Movement")
 	class UInputAction* iaJump;
 
-	UPROPERTY(EditDefaultsOnly, Category = "Input")
-	class UInputAction* iaDash;
+	UPROPERTY(EditDefaultsOnly, Category = "Input|Movement")
+	class UInputAction* iaDodge;
+
+
+	/* IA - Combat */
+	UPROPERTY(EditDefaultsOnly, Category = "Input|Combat")
+	class UInputAction* iaAttack;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Input|Combat")
+	class UInputAction* iaSkillE;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Input|Combat")
+	class UInputAction* iaSkillQ;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Input|Combat")
+	class UInputAction* iaGuard;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Input|Combat")
+	class UInputAction* iaLockOn;
+
+
+	/* IA - Etc */
+	UPROPERTY(EditDefaultsOnly, Category = "Input|Etc")
+	class UInputAction* iaPlayer1;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Input|Etc")
+	class UInputAction* iaPlayer2;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Input|Etc")
+	class UInputAction* iaRidePet;
 
 
 	/* Movement Variables - Speed */
@@ -85,25 +108,25 @@ protected:
 
 	int32 playerJumpCurrentCount;
 
-	/* Movement Variables - Dash */
-	bool bIsDashing = false;
-    bool bCanResetDash = false;
+	/* Movement Variables - Dodge */
+	bool bIsDodging = false;
+    bool bCanResetDodge = false;
 
 	FVector prevPos;
-	FVector dashStartPos;
-	FVector dashEndPos;
+	FVector dodgeStartPos;
+	FVector dodgeEndPos;
 
     UPROPERTY(EditDefaultsOnly, Category = "Move|Dash")
-	float dashDistance = 300.f;
+	float dodgeDistance = 300.f;
 
 	UPROPERTY(EditDefaultsOnly, Category = "Move|Dash")
-	float dashCurrentTime = 0.f;
+	float dodgeCurrentTime = 0.f;
 
 	UPROPERTY(EditDefaultsOnly, Category = "Move|Dash")
-	float dashDurationTime = 0.2f;
+	float dodgeDurationTime = 0.2f;
 
 	UPROPERTY(EditDefaultsOnly, Category = "Move|Dash")
-	float dashCoolDownTime = 0.5f;
+	float dodgeCoolDownTime = 0.5f;
 
 
 	/* Statement */
@@ -117,14 +140,48 @@ protected:
 	bool bIsDead = false;
 
 
-	/* Movement - Functions */
+	/* Lock On */
+	bool bIsLockedOn = false;
+
+
+	/* Change Player*/
+	bool bIsPlayer1 = false;
+
+	/* Pet */
+	bool bIsRidingPet = false;
+
+
+	/* Movement */
 	void DoMove(const struct FInputActionValue& InValue);
 
 	void DoTurn(const struct FInputActionValue& InValue);
 
 	void DoJump(const struct FInputActionValue& InValue);
 
-	/*virtual */void StartDash(const struct FInputActionValue& InValue);
-	void DoDash(float InDeltaTime);
-	void ResetDash(float InDeltaTime);
+	/*virtual */void StartDodge(const struct FInputActionValue& InValue);
+	void DoDodge(float InDeltaTime);
+	void ResetDodge(float InDeltaTime);
+
+
+	/* Combat */
+	virtual void Attack(const struct FInputActionValue& InValue);
+
+	virtual void SkillE(const struct FInputActionValue& InValue);;
+
+	virtual void SkillQ(const struct FInputActionValue& InValue);
+
+	virtual void Guard(const struct FInputActionValue& InValue);
+
+	void LockOnOff(const struct FInputActionValue& InValue);
+
+
+	/* Etc */
+	void ChangeCharacter1(const struct FInputActionValue& InValue);
+
+	void ChangeCharacter2(const struct FInputActionValue& InValue);
+
+	void ChangeCharacter();
+
+	void RidePetOnOff(const struct FInputActionValue& InValue);
+
 };
